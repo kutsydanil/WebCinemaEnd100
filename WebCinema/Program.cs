@@ -15,17 +15,18 @@ namespace WebCinema
 
             builder.Services.AddDbContext<CinemaContext>(options => options.UseSqlServer(connectionString));
 
+
+
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI().AddDefaultTokenProviders(); ;
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
+                     options.SignIn.RequireConfirmedAccount = false;
+                    options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI().AddDefaultTokenProviders();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
-
-
-
 
             var app = builder.Build();
 
