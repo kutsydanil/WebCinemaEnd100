@@ -40,11 +40,11 @@ public partial class Films
 
     public virtual ICollection<ActorCasts> ActorCasts { get; } = new List<ActorCasts>();
 
-    public virtual CountryProductions CountryProduction { get; set; }
+    public virtual CountryProductions? CountryProduction { get; set; }
 
-    public virtual FilmProductions FilmProduction { get; set; }
+    public virtual FilmProductions? FilmProduction { get; set; }
 
-    public virtual Genres Genre { get; set; }
+    public virtual Genres? Genre { get; set; }
 
     public virtual ICollection<ListEvents> ListEvents { get; } = new List<ListEvents>();
 }
