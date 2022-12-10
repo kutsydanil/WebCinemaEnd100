@@ -12,11 +12,13 @@ namespace WebCinema.Controllers.Users
     {
         private UserManager<IdentityUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
+        private SignInManager<IdentityUser> _signInManager;
 
-        public UsersController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UsersController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<IdentityUser> signInManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -34,6 +36,8 @@ namespace WebCinema.Controllers.Users
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(newIdentityUser, "employee");
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(newIdentityUser);
+                    await _userManager.ConfirmEmailAsync(newIdentityUser, code);
                     return RedirectToAction("Index");
                 }
                 else
@@ -113,6 +117,7 @@ namespace WebCinema.Controllers.Users
                 var result = await _userManager.UpdateAsync(identityUser);
                 if (result.Succeeded)
                 {
+                    await _signInManager.RefreshSignInAsync(identityUser);
                     return RedirectToAction("Index");
                 }
             }
@@ -154,7 +159,7 @@ namespace WebCinema.Controllers.Users
                     {
                         identityUser.PasswordHash = _passwordHasher.HashPassword(identityUser, model.NewPassword);
                         await _userManager.UpdateAsync(identityUser);
-                        //await _signInManager.RefreshSignInAsync(user);
+                        await _signInManager.RefreshSignInAsync(identityUser);
                         return RedirectToAction("Index");
                     }
                     else

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebCinema.Data;
 using WebCinema.Middleware;
+using WebCinema.Validators;
 
 namespace WebCinema
 {
@@ -15,15 +16,15 @@ namespace WebCinema
 
             builder.Services.AddDbContext<CinemaContext>(options => options.UseSqlServer(connectionString));
 
-
+            builder.Services.AddTransient<IUserValidator<IdentityUser>, CustomUserValidator>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
                      options.SignIn.RequireConfirmedAccount = false;
-                    options.User.RequireUniqueEmail = true;
-            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI().AddDefaultTokenProviders();
+                     options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI().AddDefaultTokenProviders().AddErrorDescriber<CustomIdentityErrorDescriber>();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();

@@ -27,6 +27,8 @@ namespace WebCinema.Initializer
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, "admin");
+                    var code = await userManager.GenerateEmailConfirmationTokenAsync(admin);
+                    await userManager.ConfirmEmailAsync(admin, code);
                 }
             }
         }

@@ -67,9 +67,9 @@ namespace WebCinema.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
-            [Display(Name = "New email")]
+            [Required(ErrorMessage = "Не указан новый электронный адрес")]
+            [EmailAddress(ErrorMessage = "Некорректный электронный адрес")]
+            [Display(Name = "Новый электронный адрес")]
             public string NewEmail { get; set; }
         }
 
@@ -115,24 +115,47 @@ namespace WebCinema.Areas.Identity.Pages.Account.Manage
             var email = await _userManager.GetEmailAsync(user);
             if (Input.NewEmail != email)
             {
-                var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = Url.Page(
-                    "/Account/ConfirmEmailChange",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
-                    protocol: Request.Scheme);
-                await _emailSender.SendEmailAsync(
-                    Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
-                return RedirectToPage();
+                var user_list = _userManager.Users.ToList();
+                var isNew = true;
+                foreach(var u in user_list)
+                {
+                    if(u.Email == Input.NewEmail && u.UserName == Input.NewEmail)
+                    {
+                        isNew = false;
+                        break;
+                    }
+                }
+                if(isNew)
+                {
+                    var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
+                    var result = await _userManager.ChangeEmailAsync(user, Input.NewEmail, code);
+                    var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.NewEmail);
+                    if (result.Succeeded && setUserNameResult.Succeeded)
+                    {
+                        StatusMessage = "Данные были обновлены.";
+                        await _signInManager.RefreshSignInAsync(user);
+                        return RedirectToPage();
+                    }
+                    else
+                    {
+                        if (!await _userManager.IsInRoleAsync(user, "admin") && user.Email.Contains("admin"))
+                        {
+                            ModelState.AddModelError(string.Empty, "Невозможно использовать слова admin");
+                        }
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        return Page();
+                    }
+                }
+                else
+                {
+                    StatusMessage = "Пользователь уже существует.";
+                    return RedirectToPage();
+                }
             }
-
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "Почта не была изменена.";
             return RedirectToPage();
         }
 
