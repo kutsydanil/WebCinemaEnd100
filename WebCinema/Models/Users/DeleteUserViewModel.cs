@@ -1,4 +1,4 @@
-﻿namespace WebCinema.ViewModel.Users
+﻿namespace WebCinema.Models.Users
 {
     public class DeleteUserViewModel
     {

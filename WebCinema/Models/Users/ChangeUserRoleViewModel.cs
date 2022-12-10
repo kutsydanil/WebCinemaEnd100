@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace WebCinema.ViewModel.Users
+namespace WebCinema.Models.Users
 {
     public class ChangeUserRoleViewModel
     {
@@ -8,7 +8,7 @@ namespace WebCinema.ViewModel.Users
 
         public string Id { get; set; }
 
-        public string Email { get; set; }  
+        public string Email { get; set; }
 
         public List<IdentityRole> AllRoles { get; set; }
 

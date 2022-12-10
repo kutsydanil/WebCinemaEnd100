@@ -1,4 +1,4 @@
-﻿@model WebCinema.ViewModel.Users.CreateUserViewModel
+﻿@model WebCinema.Models.Users.CreateUserViewModel
 @{
     ViewData["Title"] = "Добавление нового пользователя";
 }
@@ -19,8 +19,8 @@
                 <label>Пароль</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="submit" value="Добавить" class="btn btn-primary" />
-                <a class=" btn btn-danger" asp-action="Index">Назад</a>
+                <input type="submit" value="Добавить" class="btn btn-danger" />
+                <a class="btn btn-primary" asp-action="Index">Назад</a>
             </div>
         </form>
 
@@ -32,3 +32,5 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+

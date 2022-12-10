@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp;
-using System.Runtime.InteropServices;
-using WebCinema.ViewModel.Users;
+using WebCinema.Models.Users;
 
 namespace WebCinema.Controllers.Users
 {

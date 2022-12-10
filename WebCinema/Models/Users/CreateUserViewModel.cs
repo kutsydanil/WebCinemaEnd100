@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using static System.Collections.Specialized.BitVector32;
 
 
-namespace WebCinema.ViewModel.Users
+namespace WebCinema.Models.Users
 {
     public class CreateUserViewModel
     {

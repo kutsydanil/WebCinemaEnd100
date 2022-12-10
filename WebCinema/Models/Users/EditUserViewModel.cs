@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace WebCinema.ViewModel.Users
+namespace WebCinema.Models.Users
 {
     public class EditUserViewModel
     {
