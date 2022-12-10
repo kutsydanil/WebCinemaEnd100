@@ -1,17 +1,19 @@
-﻿@model CinemaCore.Models.Genres
+﻿@model CinemaCore.Models.CountryProductions
 
 @{
-    ViewData["Title"] = "Удаление жанра";
+    ViewData["Title"] = "Удаление жанра страны-производителя";
 }
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="row">
         <h3>Удалить запись?</h3>
         <hr />
-        <b>@Html.DisplayNameFor(model => model.Name):</b> @Html.DisplayFor(model => model.Name)<br>
+        <div class="col-sm-2">
+            <b>@Html.DisplayNameFor(model => model.Name):</b> @Html.DisplayFor(model => model.Name)
+        </div>
     </div>
-
-    <form asp-action="Delete" asp-controller="Genres">
+    
+    <form asp-action="Delete" asp-controller="CountryProductions">
         <div class="form-floating mb-3">
             <div class="form-floating mb-3"></div>
             <input type="hidden" asp-for="Id" />
@@ -20,4 +22,3 @@
         </div>
     </form>
 </div>
-

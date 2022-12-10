@@ -1,4 +1,4 @@
-﻿@model CinemaCore.Models.Genres
+﻿@model CinemaCore.Models.CountryProductions
 
 @{
     ViewData["Title"] = "Редактирование записи";
@@ -6,14 +6,14 @@
 
 <div class="row">
     <div class="col-md-4">
-        <h3>Редактирование записи</h3>
+        <h4>Страна-производитель</h4>
         <hr />
         <form asp-action="Edit">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-floating mb-3">
                 <input asp-for="Name" class="form-control" />
-                <label asp-for="Name"></label>
+                <label asp-for="Name" class="control-label"></label>
             </div>
             <div class="form-floating">
                 <input type="submit" value="Сохранить" class="btn btn-secondary" />
@@ -23,7 +23,7 @@
     </div>
 </div>
 
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+

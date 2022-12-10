@@ -1,0 +1,111 @@
+﻿@using WebCinema.Models;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, WebCinema
+
+@model WebCinema.Models.IndexViewModels.FilmsViewModel
+
+@{
+    ViewData["Title"] = "Фильмы";
+}
+
+<h1>Фильмы</h1>
+
+<form method="get">
+    <label>Название: </label>
+    <input name="filmName" value="@Model.FilterViewModel.SelectedName" />
+
+    <label>Жанр: </label>
+    <select name="selectedGenre" asp-items="Model.FilterViewModel.Genres"></select>
+    
+    <label>Компания: </label>
+    <select name="selectedFilmProduction" asp-items="Model.FilterViewModel.FilmProductions"></select>
+
+    <label>Возраст. огр:</label>
+    <input name="filmAgeLimit" value="@Model.FilterViewModel.SelectedAgeLimit" />
+
+    <label>Длительность:</label>
+    <input name="filmDuration" value="@Model.FilterViewModel.SelectedDuration" />
+
+    <input type="submit" value="Фильтр" class="btn btn-primary" />
+</form>
+
+<p>
+    <a asp-action="Create">Создать запись</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.NameSort)">Название</a>
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.DurationSort)">Длительность</a>
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.AgeSort)">Возрастные ограничения
+                </a>
+            </th>
+            <th>
+                Описание
+            </th>
+            <th>
+                Страна-производитель
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.FilmProductionSort)">Компания-производитель</a>
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.GenreSort)">Жанр
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.FilmsList)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duration)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AgeLimit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CountryProduction.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FilmProduction.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Детали</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<page-link page-model="Model.PageViewModel" page-action="Index"
+           page-url-name="@(Model.FilterViewModel.SelectedName)"
+           page-url-company="@(Model.FilterViewModel.SelectedFilmProduction)"
+           page-url-genre="@(Model.FilterViewModel.SelectedGenre)"
+           page-url-duration="@(Model.FilterViewModel.SelectedDuration)"
+           page-url-ageLimit="@(Model.FilterViewModel.SelectedAgeLimit)"
+           page-url-sortorder="@(Model.SortViewModel.Current)">
+</page-link>
