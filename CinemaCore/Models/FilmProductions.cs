@@ -9,7 +9,5 @@ public partial class FilmProductions
 
     public string Name { get; set; } = null!;
 
-    public string Country { get; set; } = null!;
-
     public virtual ICollection<Films> Films { get; } = new List<Films>();
 }

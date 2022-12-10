@@ -35,7 +35,7 @@ namespace WebCinema
             int genresCount = await InitGenresTable(db, genres);
 
             int filmProductionsCount = 500;
-            await InitFilmProductions(db, filmProductionsCount, сountries);
+            await InitFilmProductions(db, filmProductionsCount);
 
             int filmsCount = 1000;
             await InitTableFilms(db, filmProductionsCount, genresCount, сountriesCount, filmsCount);
@@ -123,7 +123,7 @@ namespace WebCinema
         /// <summary>
         /// Генератор для таблицы Компания-производитель
         /// </summary>
-        public static async Task InitFilmProductions(CinemaContext db, int filmProductionCount, string[] сountries)
+        public static async Task InitFilmProductions(CinemaContext db, int filmProductionCount)
         {
             if (!await db.FilmProductions.AnyAsync())
             {
@@ -131,7 +131,7 @@ namespace WebCinema
                 for (int i = 0; i < filmProductionCount; i++)
                 {
                     string filmProduction = "Компания_" + i.ToString();
-                    await db.AddAsync(new FilmProductions { Name = filmProduction, Country = сountries[randObj.Next(сountries.Length)] });
+                    await db.AddAsync(new FilmProductions { Name = filmProduction });
                 }
                 await db.SaveChangesAsync();
             }

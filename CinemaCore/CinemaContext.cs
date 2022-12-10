@@ -100,8 +100,6 @@ public partial class CinemaContext : DbContext
         modelBuilder.Entity<FilmProductions>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__FilmProd__3214EC07B0DFD8B3");
-
-            entity.Property(e => e.Country).HasMaxLength(150);
             entity.Property(e => e.Name).HasMaxLength(100);
         });
 
