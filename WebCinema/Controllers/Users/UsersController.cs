@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Project;
+using Microsoft.EntityFrameworkCore;
 using WebCinema.Models.Users;
 
 namespace WebCinema.Controllers.Users
@@ -92,12 +94,36 @@ namespace WebCinema.Controllers.Users
         [HttpPost]
         public async Task<IActionResult> Delete(DeleteUserViewModel model)
         {
-            IdentityUser identityUser = await _userManager.FindByIdAsync(model.Id);
-            if(identityUser != null) 
-            {
-                IdentityResult result = await _userManager.DeleteAsync(identityUser);
-            }
-            return RedirectToAction("Index");
+                IdentityUser identityUser = await _userManager.FindByIdAsync(model.Id);
+                if (identityUser != null)
+                {
+                    if (!await _userManager.IsInRoleAsync(identityUser, "admin"))
+                    {
+                        IdentityResult result = await _userManager.DeleteAsync(identityUser);
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        var users = _userManager.GetUsersInRoleAsync("admin").Result;
+                        if (users.Count != 1)
+                        {
+                            IdentityResult result = await _userManager.DeleteAsync(identityUser);
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            model = new DeleteUserViewModel
+                            {
+                                Email = identityUser.Email,
+                                Id = identityUser.Id,
+                                UserRoles = await _userManager.GetRolesAsync(identityUser)
+                            };
+                            ModelState.AddModelError(string.Empty, "Это последний пользователь с admin. Удалить невозможно.");
+                            return View(model);
+                        }
+                    }
+                }
+                return View(model); 
         }
 
         public async Task<IActionResult> ChangeUserRole(string id)
@@ -133,7 +159,7 @@ namespace WebCinema.Controllers.Users
                 var result = await _userManager.UpdateAsync(identityUser);
                 if (result.Succeeded)
                 {
-                    await _signInManager.RefreshSignInAsync(identityUser);
+                    //await _signInManager.RefreshSignInAsync(identityUser);
                     return RedirectToAction("Index");
                 }
             }
@@ -163,30 +189,36 @@ namespace WebCinema.Controllers.Users
                 IdentityUser identityUser = await _userManager.FindByIdAsync(model.Id);
                 if(identityUser != null)
                 {
-                    identityUser.Email = model.Email;
-                    var _userValidator = HttpContext.RequestServices.GetService(typeof(IUserValidator<IdentityUser>)) as IUserValidator<IdentityUser>;
-                    IdentityResult result_user = await _userValidator.ValidateAsync(_userManager, identityUser);
-
-                    var _passwordValidator = HttpContext.RequestServices.GetService(typeof(IPasswordValidator<IdentityUser>)) as IPasswordValidator<IdentityUser>;
-                    var _passwordHasher = HttpContext.RequestServices.GetService(typeof(IPasswordHasher<IdentityUser>)) as IPasswordHasher<IdentityUser>;
-
-                    IdentityResult result_password = await _passwordValidator.ValidateAsync(_userManager, identityUser, model.NewPassword);
-                    if (result_password.Succeeded && result_user.Succeeded)
+                    var user_list = _userManager.Users.ToList();
+                    var isNew = true;
+                    foreach (var u in user_list)
                     {
-                        identityUser.PasswordHash = _passwordHasher.HashPassword(identityUser, model.NewPassword);
-                        await _userManager.UpdateAsync(identityUser);
-                        await _signInManager.RefreshSignInAsync(identityUser);
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        foreach (var error in result_password.Errors)
+                        if (u.Email == model.Email && u.UserName == model.Email)
                         {
-                            ModelState.AddModelError(string.Empty, error.Description);
+                            isNew = false;
+                            break;
                         }
-                        foreach (var error in result_user.Errors)
+                    }
+                    if(isNew) 
+                    {
+                        var code = await _userManager.GenerateChangeEmailTokenAsync(identityUser, model.Email);
+                        var result = await _userManager.ChangeEmailAsync(identityUser, model.Email, code);
+                        var setUserNameResult = await _userManager.SetUserNameAsync(identityUser, model.Email);
+
+                        if (result.Succeeded && setUserNameResult.Succeeded)
                         {
-                            ModelState.AddModelError(string.Empty, error.Description);
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
+                            foreach (var error in setUserNameResult.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
                         }
                     }
                 }
