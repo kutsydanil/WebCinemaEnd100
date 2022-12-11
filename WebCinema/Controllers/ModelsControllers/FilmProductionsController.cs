@@ -11,26 +11,29 @@ using WebCinema.Models.FilterViewModels;
 using WebCinema.Models.SortViewModels;
 using WebCinema.Models.IndexViewModels;
 using WebCinema.Enum;
-
+using WebCinema.Services;
 
 namespace WebCinema.Controllers
 {
     public class FilmProductionsController : Controller
     {
         private readonly CinemaContext _context;
+        private string Name = "FilmProductions";
+        private GenericMemoryCache<FilmProductions> _cache;
 
-        public FilmProductionsController(CinemaContext context)
+        public FilmProductionsController(CinemaContext context, GenericMemoryCache<FilmProductions> cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         
         // GET: FilmProductions
-        public async Task<IActionResult> Index(string? filmProductionName, int page = 1, SortState sortOrder = SortState.NameAsc)
+        public IActionResult Index(string? filmProductionName, int page = 1, SortState sortOrder = SortState.NameAsc)
         {
             int pageSize = 12;
 
-            IQueryable<FilmProductions> filmProductions = _context.FilmProductions;
+            IEnumerable<FilmProductions> filmProductions = _cache.GetAll(Name);
 
             if (!string.IsNullOrEmpty(filmProductionName))
             {
@@ -47,8 +50,8 @@ namespace WebCinema.Controllers
                     break;
             }
 
-            var count = await filmProductions.CountAsync();
-            var items = await filmProductions.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var count = filmProductions.Count();
+            var items = filmProductions.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             FilmProductionsViewModel viewModel = new FilmProductionsViewModel(items,
                 new PageViewModel(count, page, pageSize),
@@ -59,15 +62,13 @@ namespace WebCinema.Controllers
 
        
         // GET: FilmProductions/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.FilmProductions == null)
+            if (id == null || _cache.GetAll(Name) == null)
             {
                 return NotFound();
             }
-
-            var filmProductions = await _context.FilmProductions
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var filmProductions = _cache.GetAll(Name).FirstOrDefault(f => f.Id == id);
             if (filmProductions == null)
             {
                 return NotFound();
@@ -94,20 +95,21 @@ namespace WebCinema.Controllers
             {
                 _context.Add(filmProductions);
                 await _context.SaveChangesAsync();
+                _cache.CreateCache(Name);
                 return RedirectToAction(nameof(Index));
             }
             return View(filmProductions);
         }
 
         // GET: FilmProductions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null || _context.FilmProductions == null)
+            if (id == null || _cache.GetAll(Name) == null)
             {
                 return NotFound();
             }
 
-            var filmProductions = await _context.FilmProductions.FindAsync(id);
+            var filmProductions = _cache.GetAll(Name).FirstOrDefault(f => f.Id == id);
             if (filmProductions == null)
             {
                 return NotFound();
@@ -132,6 +134,7 @@ namespace WebCinema.Controllers
                 {
                     _context.Update(filmProductions);
                     await _context.SaveChangesAsync();
+                    _cache.CreateCache(Name);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -151,15 +154,14 @@ namespace WebCinema.Controllers
 
         
         // GET: FilmProductions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            if (id == null || _context.FilmProductions == null)
+            if (id == null || _cache.GetAll(Name) == null)
             {
                 return NotFound();
             }
 
-            var filmProductions = await _context.FilmProductions
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var filmProductions = _cache.GetAll(Name).FirstOrDefault(f => f.Id == id);
             if (filmProductions == null)
             {
                 return NotFound();
@@ -174,23 +176,24 @@ namespace WebCinema.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.FilmProductions == null)
+            if (_cache.GetAll(Name) == null)
             {
                 return Problem("Entity set 'CinemaContext.FilmProductions'  is null.");
             }
-            var filmProductions = await _context.FilmProductions.FindAsync(id);
+            var filmProductions = _cache.GetAll(Name).FirstOrDefault(f => f.Id == id);
             if (filmProductions != null)
             {
                 _context.FilmProductions.Remove(filmProductions);
             }
             
             await _context.SaveChangesAsync();
+            _cache.CreateCache(Name);
             return RedirectToAction(nameof(Index));
         }
 
         private bool FilmProductionsExists(int id)
         {
-          return (_context.FilmProductions?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_cache.CreateCache(Name)?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

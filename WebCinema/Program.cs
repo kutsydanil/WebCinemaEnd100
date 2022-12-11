@@ -1,7 +1,10 @@
+using CinemaCore.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebCinema.Controllers;
 using WebCinema.Data;
 using WebCinema.Middleware;
+using WebCinema.Services;
 using WebCinema.Validators;
 
 namespace WebCinema
@@ -25,6 +28,13 @@ namespace WebCinema
                      options.SignIn.RequireConfirmedAccount = false;
                      options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI().AddDefaultTokenProviders().AddErrorDescriber<CustomIdentityErrorDescriber>();
+
+            builder.Services.AddTransient<GenericMemoryCache<CountryProductions>>();
+            builder.Services.AddTransient<GenericMemoryCache<Genres>>();
+            builder.Services.AddTransient<GenericMemoryCache<FilmProductions>>();
+
+            builder.Services.AddTransient<GenericMemoryCache<Films>>();
+            builder.Services.AddMemoryCache();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();

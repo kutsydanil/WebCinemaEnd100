@@ -7,24 +7,30 @@ using WebCinema.Models.FilterViewModels;
 using WebCinema.Models.SortViewModels;
 using WebCinema.Models.IndexViewModels;
 using WebCinema.Enum;
+using Microsoft.Extensions.Caching.Memory;
+using System.Runtime.CompilerServices;
+using WebCinema.Services;
+using System.Linq;
 
 namespace WebCinema.Controllers
 {
     public class CountryProductionsController : Controller
     {
         private readonly CinemaContext _context;
+        private string Name = "CountryProductions";
+        private GenericMemoryCache<CountryProductions> _cache;
 
-        public CountryProductionsController(CinemaContext context)
+        public CountryProductionsController(CinemaContext context, GenericMemoryCache<CountryProductions> cache)
         {
             _context = context;
+            _cache = cache;
         }
 
-        
-        public async Task<IActionResult> Index(string? countryProductionName, int page = 1, SortState sortOrder = SortState.NameAsc)
+        public IActionResult Index(string? countryProductionName, int page = 1, SortState sortOrder = SortState.NameAsc)
         {
             int pageSize = 12;
+            IEnumerable<CountryProductions> countryProductions = _cache.GetAll(Name);
 
-            IQueryable<CountryProductions> countryProductions = _context.CountryProductions;
             if (!string.IsNullOrEmpty(countryProductionName))
             {
                 countryProductions = countryProductions.Where(p => p.Name!.Contains(countryProductionName));
@@ -40,8 +46,8 @@ namespace WebCinema.Controllers
                     break;
             }
 
-            var count = await countryProductions.CountAsync();
-            var items = await countryProductions.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var count = countryProductions.Count();
+            var items = countryProductions.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             CountryProductionsViewModel viewModel = new CountryProductionsViewModel(items,
                 new PageViewModel(count, page, pageSize), 
@@ -49,20 +55,17 @@ namespace WebCinema.Controllers
                 new CountryProductionSortViewModel(sortOrder)
                 );
             return View(viewModel);
-
         }
 
-        
         // GET: CountryProductions/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.CountryProductions == null)
+            if (id == null || _cache.GetAll(Name) == null)
             {
                 return NotFound();
             }
 
-            var countryProductions = await _context.CountryProductions
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var countryProductions = _cache.GetAll(Name).FirstOrDefault(m => m.Id == id);
             if (countryProductions == null)
             {
                 return NotFound();
@@ -88,6 +91,7 @@ namespace WebCinema.Controllers
             {
                 _context.Add(countryProductions);
                 await _context.SaveChangesAsync();
+                _cache.CreateCache(Name);
                 return RedirectToAction(nameof(Index));
             }
             return View(countryProductions);
@@ -95,14 +99,14 @@ namespace WebCinema.Controllers
 
         
         // GET: CountryProductions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null || _context.CountryProductions == null)
+            if (id == null || _cache.GetAll(Name) == null)
             {
                 return NotFound();
             }
 
-            var countryProductions = await _context.CountryProductions.FindAsync(id);
+            var countryProductions = _cache.GetAll(Name).FirstOrDefault(c => c.Id == id);
             if (countryProductions == null)
             {
                 return NotFound();
@@ -127,6 +131,7 @@ namespace WebCinema.Controllers
                 {
                     _context.Update(countryProductions);
                     await _context.SaveChangesAsync();
+                    _cache.CreateCache(Name);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -146,15 +151,14 @@ namespace WebCinema.Controllers
 
         
         // GET: CountryProductions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            if (id == null || _context.CountryProductions == null)
+            if (id == null || _cache.GetAll(Name) == null)
             {
                 return NotFound();
             }
 
-            var countryProductions = await _context.CountryProductions
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var countryProductions = _cache.GetAll(Name).FirstOrDefault(m => m.Id == id);
             if (countryProductions == null)
             {
                 return NotFound();
@@ -169,23 +173,25 @@ namespace WebCinema.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.CountryProductions == null)
+            if (_cache.GetAll(Name) == null)
             {
                 return Problem("Entity set 'CinemaContext.CountryProductions'  is null.");
             }
-            var countryProductions = await _context.CountryProductions.FindAsync(id);
+            var countryProductions = _cache.GetAll(Name).FirstOrDefault(c => c.Id == id);
             if (countryProductions != null)
             {
                 _context.CountryProductions.Remove(countryProductions);
             }
             
             await _context.SaveChangesAsync();
+            _cache.CreateCache(Name);
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool CountryProductionsExists(int id)
         {
-          return (_context.CountryProductions?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_cache.CreateCache(Name)?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

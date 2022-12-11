@@ -7,6 +7,7 @@ using WebCinema.Models.IndexViewModels;
 using WebCinema.Models.PageViewModels;
 using WebCinema.Models.SortViewModels;
 using Microsoft.AspNetCore.Authorization;
+using WebCinema.Services;
 
 namespace WebCinema.Controllers
 {
@@ -14,17 +15,21 @@ namespace WebCinema.Controllers
     public class GenresController : Controller
     {
         private readonly CinemaContext _context;
+        private string Name = "Genres";
+        private GenericMemoryCache<Genres> _cache;
 
-        public GenresController(CinemaContext context)
+        public GenresController(CinemaContext context, GenericMemoryCache<Genres> cache)
         {
             _context = context;
+            _cache = cache;
         }
 
-        public async Task<IActionResult> Index(string? genreName, int page = 1, SortState sortOrder = SortState.NameAsc)
+        public IActionResult Index(string? genreName, int page = 1, SortState sortOrder = SortState.NameAsc)
         {
             int pageSize = 12;
 
-            IQueryable<Genres> genres = _context.Genres;
+            IEnumerable<Genres> genres = _cache.GetAll(Name);
+
             if (!string.IsNullOrEmpty(genreName))
             {
                 genres = genres.Where(p => p.Name!.Contains(genreName));
@@ -40,8 +45,8 @@ namespace WebCinema.Controllers
                     break;
             }
 
-            var count = await genres.CountAsync();
-            var items = await genres.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var count = genres.Count();
+            var items = genres.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             GenreViewModel viewModel = new GenreViewModel(items,
                 new PageViewModel(count, page, pageSize),
@@ -51,15 +56,14 @@ namespace WebCinema.Controllers
 
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.Genres == null)
+            if (id == null || _cache.GetAll(Name) == null)
             {
                 return NotFound();
             }
 
-            var genres = await _context.Genres
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var genres = _cache.GetAll(Name).FirstOrDefault(g => g.Id == id);
             if (genres == null)
             {
                 return NotFound();
@@ -81,19 +85,20 @@ namespace WebCinema.Controllers
             {
                 _context.Add(genres);
                 await _context.SaveChangesAsync();
+                _cache.CreateCache(Name);
                 return RedirectToAction(nameof(Index));
             }
             return View(genres);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null || _context.Genres == null)
+            if (id == null || _cache.GetAll(Name) == null)
             {
                 return NotFound();
             }
 
-            var genres = await _context.Genres.FindAsync(id);
+            var genres = _cache.GetAll(Name).FirstOrDefault(g => g.Id == id);
             if (genres == null)
             {
                 return NotFound();
@@ -116,6 +121,7 @@ namespace WebCinema.Controllers
                 {
                     _context.Update(genres);
                     await _context.SaveChangesAsync();
+                    _cache.CreateCache(Name);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -133,15 +139,14 @@ namespace WebCinema.Controllers
             return View(genres);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            if (id == null || _context.Genres == null)
+            if (id == null || _cache.GetAll(Name) == null)
             {
                 return NotFound();
             }
 
-            var genres = await _context.Genres
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var genres = _cache.GetAll(Name).FirstOrDefault(g => g.Id == id);
             if (genres == null)
             {
                 return NotFound();
@@ -158,19 +163,20 @@ namespace WebCinema.Controllers
             {
                 return Problem("Entity set 'CinemaContext.Genres'  is null.");
             }
-            var genres = await _context.Genres.FindAsync(id);
+            var genres = _cache.GetAll(Name).FirstOrDefault(g => g.Id == id);
             if (genres != null)
             {
                 _context.Genres.Remove(genres);
             }
             
             await _context.SaveChangesAsync();
+            _cache.CreateCache(Name);
             return RedirectToAction(nameof(Index));
         }
 
         private bool GenresExists(int id)
         {
-          return (_context.Genres?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_cache.CreateCache(Name)?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
