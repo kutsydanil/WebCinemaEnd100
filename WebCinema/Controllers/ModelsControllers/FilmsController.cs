@@ -9,9 +9,11 @@ using WebCinema.Models.FilterViewModels;
 using WebCinema.Enum;
 using WebCinema.Services;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebCinema.Controllers
 {
+    [Authorize()]
     public class FilmsController : Controller
     {
         private readonly CinemaContext _context;

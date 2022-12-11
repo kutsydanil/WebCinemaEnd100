@@ -11,9 +11,11 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Runtime.CompilerServices;
 using WebCinema.Services;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebCinema.Controllers
 {
+    [Authorize()]
     public class CountryProductionsController : Controller
     {
         private readonly CinemaContext _context;

@@ -12,9 +12,11 @@ using WebCinema.Models.SortViewModels;
 using WebCinema.Models.IndexViewModels;
 using WebCinema.Enum;
 using WebCinema.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebCinema.Controllers
 {
+    [Authorize()]
     public class FilmProductionsController : Controller
     {
         private readonly CinemaContext _context;

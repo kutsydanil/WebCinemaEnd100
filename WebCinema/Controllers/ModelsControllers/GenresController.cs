@@ -11,7 +11,7 @@ using WebCinema.Services;
 
 namespace WebCinema.Controllers
 {
-    
+    [Authorize()]
     public class GenresController : Controller
     {
         private readonly CinemaContext _context;

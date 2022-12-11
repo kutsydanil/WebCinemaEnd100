@@ -29,22 +29,40 @@ namespace WebCinema.Controllers.Users
         {
             if (ModelState.IsValid)
             {
-                IdentityUser newIdentityUser = new IdentityUser { Email = model.Email, UserName = model.Email };
-                var result = await _userManager.CreateAsync(newIdentityUser, model.Password);
-                if (result.Succeeded)
+                var user_list = _userManager.Users.ToList();
+                var isNew = true;
+                foreach (var u in user_list)
                 {
-                    await _userManager.AddToRoleAsync(newIdentityUser, "employee");
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(newIdentityUser);
-                    await _userManager.ConfirmEmailAsync(newIdentityUser, code);
-                    return RedirectToAction("Index");
+                    if (u.Email == model.Email && u.UserName == model.Email)
+                    {
+                        isNew = false;
+                        break;
+                    }
+                }
+                if (isNew)
+                {
+                    IdentityUser newIdentityUser = new IdentityUser { Email = model.Email, UserName = model.Email };
+                    var result = await _userManager.CreateAsync(newIdentityUser, model.Password);
+                    if (result.Succeeded)
+                    {
+                        await _userManager.AddToRoleAsync(newIdentityUser, "employee");
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(newIdentityUser);
+                        await _userManager.ConfirmEmailAsync(newIdentityUser, code);
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                    }
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                    ModelState.AddModelError(string.Empty, "Пользователь уже существует.");
                 }
+                
             }
             return View(model);
         }
