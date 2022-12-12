@@ -141,7 +141,7 @@ namespace WebCinema.Areas.Identity.Pages.Account.Manage
                     {
                         if (!await _userManager.IsInRoleAsync(user, "admin") && user.Email.Contains("admin"))
                         {
-                            ModelState.AddModelError(string.Empty, "Невозможно использовать слова admin");
+                            ModelState.AddModelError(string.Empty, "Невозможно использовать слово admin");
                         }
                         foreach (var error in result.Errors)
                         {

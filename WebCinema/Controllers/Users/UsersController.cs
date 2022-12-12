@@ -151,17 +151,37 @@ namespace WebCinema.Controllers.Users
             if (identityUser != null)
             {
                 var userRoles = await _userManager.GetRolesAsync(identityUser);
+                var user_list = await _userManager.GetUsersInRoleAsync("admin");
                 var addedRoles = roles.Except(userRoles);
                 var removedRoles = userRoles.Except(roles);
 
-                await _userManager.AddToRolesAsync(identityUser, addedRoles);
-                await _userManager.RemoveFromRolesAsync(identityUser, removedRoles);
 
-                var result = await _userManager.UpdateAsync(identityUser);
-                if (result.Succeeded)
+                if (await _userManager.IsInRoleAsync(identityUser, "admin") && user_list.Count == 1 && removedRoles.Contains("admin"))
                 {
-                    //await _signInManager.RefreshSignInAsync(identityUser);
-                    return RedirectToAction("Index");
+                    ModelState.AddModelError(string.Empty, "Невозможно убрать роль admin для последнего администратора системы");
+                    ChangeUserRoleViewModel model = new ChangeUserRoleViewModel
+                    {
+                        Id = identityUser.Id,
+                        AllRoles = _roleManager.Roles.ToList(),
+                        UserRoles = await _userManager.GetRolesAsync(identityUser),
+                        Email = identityUser.Email,
+                    };
+                    return View(model);
+                }
+                else
+                {
+                    await _userManager.AddToRolesAsync(identityUser, addedRoles);
+                    await _userManager.RemoveFromRolesAsync(identityUser, removedRoles);
+                    var result = await _userManager.UpdateAsync(identityUser);
+                    if (result.Succeeded)
+                    {
+                        var currentUserId = _userManager.GetUserId(HttpContext.User);
+                        if (currentUserId == identityUser.Id)
+                        {
+                            await _signInManager.RefreshSignInAsync(await _userManager.FindByIdAsync(currentUserId));
+                        }
+                        return RedirectToAction("Index");
+                    }
                 }
             }
             return NotFound();
@@ -190,38 +210,72 @@ namespace WebCinema.Controllers.Users
                 IdentityUser identityUser = await _userManager.FindByIdAsync(model.Id);
                 if(identityUser != null)
                 {
-                    var user_list = _userManager.Users.ToList();
-                    var isNew = true;
-                    foreach (var u in user_list)
+                    if(identityUser.Email == model.Email)
                     {
-                        if (u.Email == model.Email && u.UserName == model.Email)
+                        var changePasswordResult = await _userManager.ChangePasswordAsync(identityUser, model.OldPassword, model.NewPassword);
+                        if (!changePasswordResult.Succeeded)
                         {
-                            isNew = false;
-                            break;
-                        }
-                    }
-                    if(isNew) 
-                    {
-                        var code = await _userManager.GenerateChangeEmailTokenAsync(identityUser, model.Email);
-                        var result = await _userManager.ChangeEmailAsync(identityUser, model.Email, code);
-                        var setUserNameResult = await _userManager.SetUserNameAsync(identityUser, model.Email);
-
-                        if (result.Succeeded && setUserNameResult.Succeeded)
-                        {
-                            return RedirectToAction("Index");
+                            foreach (var error in changePasswordResult.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
                         }
                         else
                         {
-                            foreach (var error in result.Errors)
+                            var currentUserId = _userManager.GetUserId(HttpContext.User);
+                            if(currentUserId == identityUser.Id)
                             {
-                                ModelState.AddModelError(string.Empty, error.Description);
+                                await _signInManager.RefreshSignInAsync(await _userManager.FindByIdAsync(currentUserId));
                             }
-                            foreach (var error in setUserNameResult.Errors)
-                            {
-                                ModelState.AddModelError(string.Empty, error.Description);
-                            }
+                            return RedirectToAction("Index");
                         }
                     }
+                    else
+                    {
+                        var user_list = _userManager.Users.ToList();
+                        var isNew = true;
+                        foreach (var u in user_list)
+                        {
+                            if (u.Email == model.Email && u.UserName == model.Email)
+                            {
+                                isNew = false;
+                                break;
+                            }
+                        }
+                        if (isNew)
+                        {
+      
+                            var code = await _userManager.GenerateChangeEmailTokenAsync(identityUser, model.Email);
+                            var result = await _userManager.ChangeEmailAsync(identityUser, model.Email, code);
+                            var setUserNameResult = await _userManager.SetUserNameAsync(identityUser, model.Email);
+                            var changePasswordResult = await _userManager.ChangePasswordAsync(identityUser, model.OldPassword, model.NewPassword);
+
+                            if (result.Succeeded && setUserNameResult.Succeeded && changePasswordResult.Succeeded)
+                            {
+                                var currentUserId = _userManager.GetUserId(HttpContext.User);
+                                if(currentUserId == identityUser.Id)
+                                {
+                                    await _signInManager.RefreshSignInAsync(await _userManager.FindByIdAsync(currentUserId));
+                                }
+                                return RedirectToAction("Index");
+                            }
+                            else
+                            {
+                                foreach (var error in changePasswordResult.Errors)
+                                {
+                                    ModelState.AddModelError(string.Empty, error.Description);
+                                }
+                                foreach (var error in result.Errors)
+                                {
+                                    ModelState.AddModelError(string.Empty, error.Description);
+                                }
+                                foreach (var error in setUserNameResult.Errors)
+                                {
+                                    ModelState.AddModelError(string.Empty, error.Description);
+                                }
+                            }
+                        }
+                    }  
                 }
             }
             return View(model);

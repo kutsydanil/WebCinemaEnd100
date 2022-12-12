@@ -6,6 +6,9 @@
 <div class="row">
     <div class="col-md-5">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        
+
         <h3>Вы уверены, что хотите удалить пользователя?</h3>
         <hr />
 
@@ -15,7 +18,7 @@
         <ul>
             @foreach (var role in Model.UserRoles)
             {
-                <li>@role</li>
+                <li name="roles" >@role</li>
             }
         </ul>
           
