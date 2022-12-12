@@ -1,2 +1,271 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="WebCinema.Controllers.CountryProductionsController" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAIABBACAAAAAAAQAAAEAAEACAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\ModelsControllers\CountryProductionsController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Controllers.FilmProductionsController" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIABBACAAAAAAAQAAAEAAEACAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\ModelsControllers\FilmProductionsController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Controllers.FilmsController" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAIABBACAAAAAAAQAAAEgIEACQAEAIggAAAA=</HashCode>
+      <FileName>Controllers\ModelsControllers\FilmsController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Controllers.GenresController" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIABBACAAAAAAAQgAAEAAEACAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\ModelsControllers\GenresController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Controllers.HomeController" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAIAAAAQAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\HomeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Controllers.Users.UsersController" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAABAAAAgAAEAAEACAAMAAAAAAAA=</HashCode>
+      <FileName>Controllers\Users\UsersController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Initializer.RoleInitializer" Collapsed="true">
+    <Position X="12.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Initializer\RoleInitializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Middleware.DbInitializerMiddleware" Collapsed="true">
+    <Position X="12.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Middleware\DbInitializerMiddleware.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.FilterViewModels.CountryProductionFilterViewModel" Collapsed="true">
+    <Position X="8.75" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Models\FilterViewModels\CountryProductionFilterViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.FilterViewModels.FilmFilterViewModel" Collapsed="true">
+    <Position X="8.5" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAKAICAAAAAAAAAAAAJAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\FilterViewModels\FilmFilterViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.FilterViewModels.FilmProductionFilterViewModel" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\FilterViewModels\FilmProductionFilterViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.FilterViewModels.GenreFilterViewModel" Collapsed="true">
+    <Position X="8.75" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\FilterViewModels\GenreFilterViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.IndexViewModels.CountryProductionsViewModel" Collapsed="true">
+    <Position X="4.5" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAACAAAAAIAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IndexViewModels\CountryProductionsViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.IndexViewModels.FilmProductionsViewModel" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAACAAAAAAAAAAEAAAQAAAAAAA=</HashCode>
+      <FileName>Models\IndexViewModels\FilmProductionsViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.IndexViewModels.FilmsViewModel" Collapsed="true">
+    <Position X="4.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAgAAAAAAAAAAAAACAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IndexViewModels\FilmsViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.IndexViewModels.GenreViewModel" Collapsed="true">
+    <Position X="4.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAQAAAAAAAACAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IndexViewModels\GenreViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.PageViewModels.PageViewModel" Collapsed="true">
+    <Position X="11.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAgAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\PageViewModels\PageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.SortViewModels.CountryProductionSortViewModel" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SortViewModels\CountryProductionSortViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.SortViewModels.FilmProductionSortViewModel" Collapsed="true">
+    <Position X="6.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Models\SortViewModels\FilmProductionSortViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.SortViewModels.FilmSortViewModel" Collapsed="true">
+    <Position X="6.5" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAACAABEACAAABAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SortViewModels\FilmSortViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.SortViewModels.GenreSortViewModelcs" Collapsed="true">
+    <Position X="6.5" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SortViewModels\GenreSortViewModelcs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.Users.ChangeUserRoleViewModel" Collapsed="true">
+    <Position X="4.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAAAAAAEAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Users\ChangeUserRoleViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.Users.CreateUserViewModel" Collapsed="true">
+    <Position X="9.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Users\CreateUserViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.Users.DeleteUserViewModel" Collapsed="true">
+    <Position X="6.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Users\DeleteUserViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Models.Users.EditUserViewModel" Collapsed="true">
+    <Position X="8" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Users\EditUserViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Services.GenericMemoryCache&lt;T&gt;" Collapsed="true">
+    <Position X="12.25" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAIAABgAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Services\GenericMemoryCache.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Tag_Helpers.PageLinkTagHelper" Collapsed="true">
+    <Position X="4.5" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAIAAAAAgABAAEAAAAAAAAAAAAAIAAAACA=</HashCode>
+      <FileName>Tag-Helpers\PageLinkTagHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Tag_Helpers.SortHeaderTagHelper" Collapsed="true">
+    <Position X="6.5" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgCAAAEAAAAAAAAAAAAAIQAAAAY=</HashCode>
+      <FileName>Tag-Helpers\SortHeaderTagHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Validators.CustomIdentityErrorDescriber" Collapsed="true">
+    <Position X="11.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AgACEAAAgAAACBUAPAAAAQAACoAAAgCAAAAAAAQAAAQ=</HashCode>
+      <FileName>Validators\CustomIdentityErrorDescriber.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Validators.CustomUserValidator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Validators\CustomUserValidator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WebCinema.Areas.Identity.Pages.Account.LoginModel" Collapsed="true">
+    <Position X="7.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAgAABAAAAAMAAAAQAAAAIEAAAAAAA=</HashCode>
+      <FileName>Areas\Identity\Pages\Account\Login.cshtml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Areas.Identity.Pages.Account.RegisterModel" Collapsed="true">
+    <Position X="5.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAADAAAAQAAAAAgAABAAAAAMgCAAQQAAAIEAAAAAAA=</HashCode>
+      <FileName>Areas\Identity\Pages\Account\Register.cshtml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Areas.Identity.Pages.Account.Manage.ChangePasswordModel" Collapsed="true">
+    <Position X="4" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAgAABAAAAAMAAAAAAAAAAEAIAAAAA=</HashCode>
+      <FileName>Areas\Identity\Pages\Account\Manage\ChangePassword.cshtml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Areas.Identity.Pages.Account.Manage.EmailModel" Collapsed="true">
+    <Position X="2.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAgACAAAAAgAABAAAAAEACAAAAAAgABgIAAAAA=</HashCode>
+      <FileName>Areas\Identity\Pages\Account\Manage\Email.cshtml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Areas.Identity.Pages.Account.Manage.IndexModel" Collapsed="true">
+    <Position X="9.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAgAAAAAAAgAQBAAAAAEAAAAAAAAAAEAIAAAAA=</HashCode>
+      <FileName>Areas\Identity\Pages\Account\Manage\Index.cshtml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.Areas.Identity.Pages.Account.Manage.ManageNavPages" Collapsed="true">
+    <Position X="0.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQgAABAACAggAAAKAgCQiAAAAAAAwAAAAUAAAAAAAA=</HashCode>
+      <FileName>Areas\Identity\Pages\Account\Manage\ManageNavPages.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebCinema.DbInitializer" Collapsed="true">
+    <Position X="12.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAACAgAAAAEAAAAAQCACAAAACQAAAAAASAAIEAA=</HashCode>
+      <FileName>Initializer\DbInitializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="WebCinema.Enum.SortState" Collapsed="true">
+    <Position X="13" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAgAAAJAABAAAACAAEgCAAAIAAAgQAAAgEAAAAA=</HashCode>
+      <FileName>Enum\SortState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

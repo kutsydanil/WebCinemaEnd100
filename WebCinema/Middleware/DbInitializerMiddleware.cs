@@ -16,7 +16,7 @@ namespace WebCinema.Middleware
 
             await DbInitializer.InitializeAsync(dbContext);
 
-            await RoleInitializer.InitializeAsync(userManager, roleManager, applicationDbContext);
+            //await RoleInitializer.InitializeAsync(userManager, roleManager, applicationDbContext);
 
             await _next.Invoke(context);
         }

@@ -21,18 +21,26 @@ namespace WebCinema.Services
         {
             IEnumerable <T> elements = null;
             Type type = typeof(T);
-            if (!_cache.TryGetValue(cacheKey, out elements))
+            if(type.Name == "Films")
             {
-                elements = _table.ToList();
-                if (elements != null)
+                elements = (IEnumerable<T>?)_context.Films.Include(p => p.FilmProduction).Include(g => g.Genre).Include(c => c.CountryProduction);
+            }
+            else
+            {
+                if (!_cache.TryGetValue(cacheKey, out elements))
                 {
-                    _cache.Set(cacheKey, elements, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
-                }
-                else
-                {
-                    throw new Exception($"Проблемы в кешировании таблицы {type.Name}");
+                    elements = _table.ToList();
+                    if (elements != null)
+                    {
+                        _cache.Set(cacheKey, elements, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
+                    }
+                    else
+                    {
+                        throw new Exception($"Проблемы в кешировании таблицы {type.Name}");
+                    }
                 }
             }
+            
             return elements;
         }
 
