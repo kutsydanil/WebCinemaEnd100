@@ -143,6 +143,7 @@ namespace WebCinema.Controllers.Users
             return View(model);
         }
 
+        //Todo Сделать проверку на администратора: проверку при удалении на то, что администратор последний я сделал (т.е. удалить невозможно)..Нужно такую же вещь сделать и с изменение ролей(нельзя у админа убрать роль admin, если он последний в системе)
         [HttpPost]
         public async Task<IActionResult> ChangeUserRole(string id, List<string> roles)
         {
