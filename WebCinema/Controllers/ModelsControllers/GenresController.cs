@@ -17,6 +17,7 @@ namespace WebCinema.Controllers
         private readonly CinemaContext _context;
         private string Name = "Genres";
         private GenericMemoryCache<Genres> _cache;
+        private string _http_string_genres = "Genres";
 
         public GenresController(CinemaContext context, GenericMemoryCache<Genres> cache)
         {
@@ -32,7 +33,16 @@ namespace WebCinema.Controllers
 
             if (!string.IsNullOrEmpty(genreName))
             {
-                genres = genres.Where(p => p.Name!.Contains(genreName));
+                genres = genres.Where(f => f.Name!.Contains(genreName));
+                Response.Cookies.Append(_http_string_genres, genreName);
+            }
+            else
+            {
+                if (Request.Cookies.ContainsKey(_http_string_genres))
+                {
+                    genreName = Request.Cookies[_http_string_genres];
+                    Response.Cookies.Delete(_http_string_genres);
+                }
             }
 
             switch (sortOrder)

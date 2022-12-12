@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using WebCinema.Services;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace WebCinema.Controllers
 {
@@ -21,6 +22,7 @@ namespace WebCinema.Controllers
         private readonly CinemaContext _context;
         private string Name = "CountryProductions";
         private GenericMemoryCache<CountryProductions> _cache;
+        private string _http_string_country = "CountryProduction";
 
         public CountryProductionsController(CinemaContext context, GenericMemoryCache<CountryProductions> cache)
         {
@@ -35,7 +37,16 @@ namespace WebCinema.Controllers
 
             if (!string.IsNullOrEmpty(countryProductionName))
             {
-                countryProductions = countryProductions.Where(p => p.Name!.Contains(countryProductionName));
+                countryProductions = countryProductions.Where(f => f.Name!.Contains(countryProductionName));
+                Response.Cookies.Append(_http_string_country, countryProductionName);
+            }
+            else
+            {
+                if (Request.Cookies.ContainsKey(_http_string_country))
+                {
+                    countryProductionName = Request.Cookies[_http_string_country];
+                    Response.Cookies.Delete(_http_string_country);
+                }
             }
 
             switch (sortOrder)

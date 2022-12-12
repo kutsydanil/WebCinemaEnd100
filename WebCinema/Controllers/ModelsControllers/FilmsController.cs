@@ -27,6 +27,7 @@ namespace WebCinema.Controllers
         private GenericMemoryCache<Genres> _genrecache;
         private GenericMemoryCache<CountryProductions> _countrycache;
 
+
         public FilmsController(CinemaContext context, GenericMemoryCache<Films> cache, GenericMemoryCache<FilmProductions> productionscache, GenericMemoryCache<Genres> genrecache,
             GenericMemoryCache<CountryProductions> countrycache)
         {
@@ -36,41 +37,82 @@ namespace WebCinema.Controllers
             _countrycache = countrycache;
             _genrecache = genrecache;
         }
-
         
         // GET: Films
         public async Task<IActionResult> Index(string? filmName, int? filmAgeLimit, int? filmDuration, int page = 1, SortState sortOrder = SortState.NameAsc, int selectedGenre = 0, int selectedFilmProduction = 0)
         {
             int pageSize = 10;
-            //IQueryable<Films> films = _context.Films.Include(p => p.FilmProduction).Include(g => g.Genre).Include(c => c.CountryProduction);
 
             IEnumerable<Films> films = _cache.GetAll(Name);
-            IEnumerable<FilmProductions> productions = _productionscache.GetAll(productionName);
-            IEnumerable<CountryProductions> countries = _countrycache.GetAll(countryName);
-            IEnumerable<Genres> genres = _genrecache.GetAll(genreName);
 
             if (selectedGenre != 0)
             {
                 films = films.Where(f => f.GenreId == selectedGenre);
+                Response.Cookies.Append("SelectedGenre", selectedGenre.ToString());
             }
+            else
+            {
+                if (Request.Cookies.ContainsKey("SelectedGenre"))
+                {
+                    selectedGenre = Convert.ToInt32(Request.Cookies["SelectedGenre"]);
+                    Response.Cookies.Delete("SelectedGenre");
+                }
+            }
+
             if (selectedFilmProduction != 0)
             {
                 films = films.Where(f => f.FilmProductionId == selectedFilmProduction);
+                Response.Cookies.Append("SelectedFilmProduction", selectedFilmProduction.ToString());
+            }
+            else
+            {
+                if (Request.Cookies.ContainsKey("SelectedFilmProduction"))
+                {
+                    selectedFilmProduction = Convert.ToInt32(Request.Cookies["SelectedFilmProduction"]);
+                    Response.Cookies.Delete("SelectedFilmProduction");
+                }
             }
 
             if (!string.IsNullOrEmpty(filmName))
             {
                 films = films.Where(f => f.Name!.Contains(filmName));
+                Response.Cookies.Append(Name, filmName);
+            }
+            else
+            {
+                if (Request.Cookies.ContainsKey(Name))
+                {
+                    filmName = Request.Cookies[Name];
+                    Response.Cookies.Delete(Name);
+                }
             }
 
             if (filmAgeLimit != null && filmAgeLimit > 0)
             {
                 films = films.Where(f => f.AgeLimit == filmAgeLimit);
+                Response.Cookies.Append("SeletedAgeLimit", filmAgeLimit.ToString());
+            }
+            else
+            {
+                if (Request.Cookies.ContainsKey("SeletedAgeLimit"))
+                {
+                    filmAgeLimit = Convert.ToInt32(Request.Cookies["SeletedAgeLimit"]);
+                    Response.Cookies.Delete("SeletedAgeLimit");
+                }
             }
 
             if (filmDuration != null && filmDuration > 0)
             {
                 films = films.Where(f => f.Duration == filmDuration);
+                Response.Cookies.Append("SeletedDuration", filmDuration.ToString());
+            }
+            else
+            {
+                if (Request.Cookies.ContainsKey("SeletedDuration"))
+                {
+                    filmDuration = Convert.ToInt32(Request.Cookies["SeletedDuration"]);
+                    Response.Cookies.Delete("SeletedDuration");
+                }
             }
 
             switch (sortOrder)

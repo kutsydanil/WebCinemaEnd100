@@ -1,6 +1,7 @@
 using CinemaCore.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using WebCinema.Controllers;
 using WebCinema.Data;
 using WebCinema.Middleware;
@@ -35,6 +36,9 @@ namespace WebCinema
 
             builder.Services.AddTransient<GenericMemoryCache<Films>>();
             builder.Services.AddMemoryCache();
+
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession();
 
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();

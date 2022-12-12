@@ -22,6 +22,7 @@ namespace WebCinema.Controllers
         private readonly CinemaContext _context;
         private string Name = "FilmProductions";
         private GenericMemoryCache<FilmProductions> _cache;
+        private string _http_string_filmProduction = "FilmProductions";
 
         public FilmProductionsController(CinemaContext context, GenericMemoryCache<FilmProductions> cache)
         {
@@ -29,7 +30,6 @@ namespace WebCinema.Controllers
             _cache = cache;
         }
 
-        
         // GET: FilmProductions
         public IActionResult Index(string? filmProductionName, int page = 1, SortState sortOrder = SortState.NameAsc)
         {
@@ -40,6 +40,15 @@ namespace WebCinema.Controllers
             if (!string.IsNullOrEmpty(filmProductionName))
             {
                 filmProductions = filmProductions.Where(f => f.Name!.Contains(filmProductionName));
+                Response.Cookies.Append(_http_string_filmProduction, filmProductionName);
+            }
+            else
+            {
+                if (Request.Cookies.ContainsKey(_http_string_filmProduction))
+                {
+                    filmProductionName = Request.Cookies[_http_string_filmProduction];
+                    Response.Cookies.Delete(_http_string_filmProduction);
+                }
             }
 
             switch (sortOrder)
